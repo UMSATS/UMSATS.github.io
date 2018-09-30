@@ -539,7 +539,7 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\buihh-INS\Dropbox\CodingLibrary\Angular\UMSATS.github.io\src\styles.css */"./src/styles.css");
+module.exports = __webpack_require__(/*! C:\Users\buihh-INS\Dropbox\CodingLibrary\Angular\umsats-client\src\styles.css */"./src/styles.css");
 
 
 /***/ })

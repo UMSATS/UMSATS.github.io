@@ -41,7 +41,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-login></app-login>"
+module.exports = "<!-- <app-login></app-login> -->\r\n<router-outlet></router-outlet>"
 
 /***/ }),
 
@@ -337,7 +337,7 @@ var LoginComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".icon-size {\r\n    width: 220px;\r\n    height: 55px;\r\n}"
 
 /***/ }),
 
@@ -348,7 +348,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  user works!\n</p>\n"
+module.exports = "<mat-toolbar color=\"primary\">\n    <mat-toolbar-row>\n        <span style=\"padding-right:3px; padding-top: 3px; display:inline-block;\">\n      <img class=\"icon-size\" src=\"http://www.umsats.ca/wp-content/uploads/2018/08/cropped-UMSATS_Logo-3.png\">\n    </span>\n        <span fxFlex></span>\n\n        <button mat-button>About</button>\n        <button mat-button>Contact</button>\n        <button mat-button>Log-out</button>\n    </mat-toolbar-row>\n</mat-toolbar>\n\n<h1>Welcome admin!</h1>"
 
 /***/ }),
 

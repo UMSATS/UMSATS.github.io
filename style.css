@@ -58,6 +58,8 @@ button {
     padding: 7px 14px;
     border-radius: 5px;
     border-bottom: 4px solid #219882;
+    width: auto;
+    margin-bottom: 10px;
 }
 
 .btn:hover, .btn:focus {

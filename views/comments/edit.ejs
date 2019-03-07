@@ -1,0 +1,22 @@
+<% include ../partials/header %>
+
+<!--EDIT COMMENT-->
+
+<div class="container" style="width: 50%;">
+    <h1>
+        Edit comment
+    </h1>
+    <form method="POST" action="/items/<%= item_id %>/comments/<%= comment._id %>?_method=PUT" class="border shadow-sm p-3 mb-5 bg-white rounded">
+      <div class="form-group">
+        <label for="textInput">Edit your comment</label>
+        <textarea rows="4" cols="50" id="textInput" class="form-control" type="text" name="comment[text]"><%= comment.text %></textarea>
+      </div>
+      <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="checkBox" required>
+        <label class="form-check-label" for="checkBox">Это навсегда</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<% include ../partials/footer %>

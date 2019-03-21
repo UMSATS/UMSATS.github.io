@@ -10,16 +10,21 @@ const express =             require("express"),
     serveStatic           = require("serve-static"),
     methodOverride        = require("method-override"),
     ADMIN                 = require("./exports/exports").ADMIN,
-    multer                = require("multer");
-    
+    multer                = require("multer"),
+    schedule              = require("node-schedule");
+
+// Additional functions
+const logic = require("./serverLogic/stats"),
+    updateStats = logic.updateStats;
+
 // ROUTES
 var AuthRoutes = require("./routes/auth"),
     IndexRoutes = require("./routes/index"),
     ItemRoutes = require("./routes/items"),
     CommentRoutes = require("./routes/comments");
 
-// MAKE ITEMIMG FOLDER PUBLIC
-app.use('/items/views/assets/itemImg', express.static('views/assets/itemImg'));
+// MAKE FOLDERS FOLDER PUBLIC
+app.use('/items/views/static/assets/', express.static('views/static/assets/'));
 
 // CONFIGURATION AND MONGOOSE
 mongoose.connect("mongodb://localhost/umsats", {useNewUrlParser: true});
@@ -56,5 +61,9 @@ app.use("/items/:id/comments", CommentRoutes);
 
 // LISTENER
 app.listen(3000, function(){
-    console.log("Server has started");
+    date = new Date();
+    console.log("Server has started at " + date.getHours() + ":" + date.getMinutes());
 });
+
+// Updating statistics about each item
+schedule.scheduleJob('* * * 1 * *', updateStats);

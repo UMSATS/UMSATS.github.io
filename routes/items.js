@@ -4,7 +4,8 @@ const express = require("express"),
     Record = require("../models/record"),
     User = require("../models/user"),
     fs = require('fs'),
-    nodemailer = require("nodemailer");
+    nodemailer = require("nodemailer"),
+    flash = require('express-flash-notification');
 
 // storage
 const multer = require("multer"),
@@ -18,10 +19,10 @@ const multer = require("multer"),
     },
     storage = multer.diskStorage({
         destination: function(req, res, cb){
-            cb(null, './views/assets/itemImg/');
+            cb(null, './views/static/assets/items/');
         },
         filename: function(req, file, cb){
-            cb(null, req.body.item.name + file.originalname);
+            cb(null, req.body.item.name + '.' + file.originalname.split('.')[1]);
         }
     }),
     upload = multer({
@@ -80,9 +81,34 @@ router.get("/:id", isLoggedIn, function(req, res) {
         if(err){
             console.log(err);
         } else {
+
+            // increment the number of visits
+            item.statistics.visitsThisMonth++;
+            item.save();
+
             res.render("Items/show", {item: item});
         }
     });
+});
+
+// search route
+router.post("/search", isLoggedIn, function(req, res){
+     var superString = ".*" + req.body.searchKey + ".*";
+
+     Item.find(
+         {
+             "$or": [
+                 {name: {$regex: superString, $options: "i"}},
+                 {description: {$regex: superString, $options: "i"}}
+             ]
+         }
+     , function(err, items){
+         if(err){
+             console.log(err);
+         } else {
+             res.render("Items/items", {items: items});
+         }
+     });
 });
 
 //post new item
@@ -91,9 +117,17 @@ router.post("/", isLoggedAdmin, upload.single('image'), function(req, res){
         if(err){
             console.log(err);
         } else {
+            // initialising all the fields
             newItem.availability = true;
             newItem.image.path = req.file.path;
+            newItem.category = req.body.category;
             newItem.image.contentType = req.file.mimeType;
+            newItem.statistics.visitsThisMonth = 0;
+            newItem.statistics.takenThisMonth = 0;
+            for(let i = 0; i < 12; i++){
+                newItem.statistics.yearLog.visits.push(0);
+                newItem.statistics.yearLog.wasTaken.push(0);
+            }
             //(req.protocol + '://' + req.get('host') + req.originalUrl + newItem._id)
             newItem.save();
             console.log("Item created: " + newItem.name);
@@ -140,11 +174,15 @@ router.put("/:id", isLoggedAdmin, upload.single('image'), function(req, res){
 
 // destroy item
 router.delete("/:id", isLoggedAdmin, function(req, res){
-    Item.findByIdAndRemove(req.params.id, function(err){
+    Item.findById(req.params.id, function(err, toRemove){
         if(err){
             console.log(err);
+        } else {
+            let nameRemoved = toRemove.name;
+            fs.unlinkSync(toRemove.image.path);
+            toRemove.remove();
+            console.log("Item deleted: " + nameRemoved);
         }
-        console.log("Item deleted: " + req.params.id);
         res.redirect("/items");
     });
 });
@@ -181,6 +219,7 @@ router.post('/:id/take', isLoggedIn, function (req, res){
                         // updating item
                         item.availability = false;
                         item.records.push(record);
+                        item.statistics.takenThisMonth++;
                         item.save();
 
                         // updating user
@@ -195,7 +234,7 @@ router.post('/:id/take', isLoggedIn, function (req, res){
                         });
                         console.log("Item " + item.name + " was taken!");
 
-                        sendEmail('take', record);
+                        //sendEmail('take', record);
                     }
                 });
             }
@@ -275,6 +314,5 @@ function sendEmail(param, record){
         }
     });
 }
-
 
 module.exports = router;

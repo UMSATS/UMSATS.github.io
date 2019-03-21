@@ -79,6 +79,11 @@ button {
     color: #c2fbfe;
 }
 
+#myChart {
+    width: 100rem !important;
+    height: 50rem !important;
+}
+
 @media (max-width: 576px) {
     .modal-dialog {
         width: 100%;

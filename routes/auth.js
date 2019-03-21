@@ -1,7 +1,8 @@
-var express = require("express");
-var router = express.Router();
-var User = require("../models/user");
-var passport = require("passport");
+const express = require("express");
+const router = express.Router();
+const User = require("../models/user");
+const passport = require("passport");
+const flash = require('express-flash-notification');
 const myFunc = require('../exports/exports'),
     isLoggedIn = myFunc.isLoggedIn,
     ADMIN = myFunc.ADMIN;
